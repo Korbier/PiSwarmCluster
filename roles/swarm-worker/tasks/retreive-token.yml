@@ -1,0 +1,6 @@
+---
+# tasks file for swarm-leader
+- name: 'Retreiving leader info'
+  docker_swarm_info:
+  delegate_to: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}"
+  register: leader_info

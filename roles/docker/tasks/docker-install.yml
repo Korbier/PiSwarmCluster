@@ -1,0 +1,9 @@
+- name: 'Download Docker script'
+  become: true
+  get_url:
+    url: 'https://get.docker.com/'
+    dest: ~/get-docker.sh
+
+- name: 'Executing Docker script'
+  become: true
+  shell: 'sh ~/get-docker.sh'

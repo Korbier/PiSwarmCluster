@@ -1,0 +1,11 @@
+- name: 'Install dependencies'
+  become: true
+  apt:
+    pkg: '{{ packages }}'
+    update_cache: yes
+    state: latest
+
+- name: 'Install python dependencies'
+  become: true
+  pip:
+    name: docker

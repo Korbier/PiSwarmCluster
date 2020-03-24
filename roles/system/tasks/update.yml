@@ -1,0 +1,11 @@
+---
+# Updating system packages
+- name: "Update package repositories"
+  become: true
+  apt:
+    name: "*"
+    state: latest
+- name: "Upgrade packages"
+  become: true
+  apt:
+    upgrade: dist

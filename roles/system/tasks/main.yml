@@ -1,0 +1,4 @@
+---
+# tasks file for system
+- include_tasks: hostname.yml
+- include_tasks: update.yml

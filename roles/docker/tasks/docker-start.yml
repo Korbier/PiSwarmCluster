@@ -1,0 +1,5 @@
+- name: Starting Docker service
+  become: true
+  systemd:
+    state: started
+    name: docker.service

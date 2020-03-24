@@ -1,0 +1,4 @@
+---
+# tasks file for swarm-leader
+- include_tasks: init-swarm.yml
+- include_tasks: install-docker-swarm-visualizer.yml

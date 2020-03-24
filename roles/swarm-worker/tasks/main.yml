@@ -1,0 +1,4 @@
+---
+# tasks file for swarm-leader
+- include_tasks: retreive-token.yml
+- include_tasks: join-leader.yml
