@@ -1,0 +1,11 @@
+- name: Create data directory
+  file:
+    path: /home/pi/gluster/brick
+    state: directory
+    mode: '0755'
+
+- name: Create volume directory
+  file:
+    path: /home/pi/volumes/
+    state: directory
+    mode: '0755'

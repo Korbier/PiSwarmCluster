@@ -1,0 +1,5 @@
+- name: Starting Gluster service
+  become: true
+  systemd:
+    state: started
+    name: glusterd

@@ -3,3 +3,4 @@
 - import_playbook: swarm-leader.yml
 - import_playbook: swarm-manager.yml
 - import_playbook: swarm-worker.yml
+- import_playbook: gluster.yml

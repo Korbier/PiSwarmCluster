@@ -7,5 +7,5 @@
 
 - name: 'Install python dependencies'
   become: true
-  pip:
-    name: docker
+  pip: 
+    name: '{{ packages_python }}'

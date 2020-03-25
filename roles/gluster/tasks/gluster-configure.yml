@@ -1,0 +1,26 @@
+- name: 'Attach peer'
+  become: true
+  gluster_peer:
+    state: present
+    nodes: "{{ groups['data'] | map('extract', hostvars, ['ansible_host']) | join(',')  }}"
+         
+- name: 'Create gluster volume'
+  become: true
+  gluster_volume:
+    state: present
+    name: gvolume
+    bricks: /home/pi/gluster/brick
+    rebalance: yes
+    cluster: "{{ groups['data'] | map('extract', hostvars, ['ansible_host']) | join(',') }}"
+    force: true
+  run_once: true
+
+- name: 'Start gluster volume'
+  become: true
+  gluster_volume:
+    state: started
+    name: gvolume
+
+- name: 'Mount volume'
+  become: true
+  shell: 'mount -t glusterfs localhost:/gvolume /home/pi/volumes/'

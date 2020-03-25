@@ -1,0 +1,6 @@
+- name: 'Installing gluster'
+  become: true
+  apt:
+    pkg:
+    - glusterfs-server
+    - glusterfs-client

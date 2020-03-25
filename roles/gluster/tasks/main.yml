@@ -1,0 +1,8 @@
+---
+- include_tasks: gluster-configure.yml
+# tasks file for gluster
+#- include_tasks: update.yml
+#- include_tasks: dependencies.yml
+#- include_tasks: create-directories.yml
+#- include_tasks: gluster-install.yml
+#- include_tasks: gluster-start.yml
