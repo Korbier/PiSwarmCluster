@@ -1,3 +1,3 @@
-- hosts: leader
+- hosts: all
   roles:
     - minetest

@@ -1,0 +1,6 @@
+- name: 'Adding minetest=true label to minetest node'
+  docker_node:
+    hostname: "{{ hostvars[groups['minetest'][0]]['inventory_hostname']  }}"
+    labels:
+      minetest: "true"
+    labels_state: replace

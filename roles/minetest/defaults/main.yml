@@ -1,2 +1,14 @@
 ---
 # defaults file for minetest
+directory:
+  work: /home/pi/temp_minetest
+  volume: /home/pi/local-volumes/minetest
+mods:
+  - mod:
+    dir: ethereal
+    name: ethereal
+    url: https://notabug.org/TenPlus1/ethereal/archive/master.zip
+#  - mod:
+#    dir: craftguide-master
+#    name: craftguide
+#    url: https://github.com/minetest-mods/craftguide/archive/master.zip 
