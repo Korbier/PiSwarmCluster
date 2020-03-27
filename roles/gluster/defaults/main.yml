@@ -1,4 +1,9 @@
 ---
-# defaults file for docker
+# defaults file for gluster
+directory:
+  volume:
+    shared: /home/pi/volumes-shared
+  gluster: /home/pi/gluster/brick
+
 packages:
   - software-properties-common

@@ -5,6 +5,7 @@
   apt:
     name: "*"
     state: latest
+    
 - name: "Upgrade packages"
   become: true
   apt:

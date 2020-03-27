@@ -1,0 +1,3 @@
+directory:
+  volume:
+    local: /home/pi/volumes-local

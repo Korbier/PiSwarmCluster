@@ -1,5 +1,11 @@
 ---
 # tasks file for swarm-leader
+- name: 'Downloading docker image'
+  become: true
+  docker_image:
+    name: alexellis2/visualizer-arm:latest
+    source: pull
+    
 - name: 'Deploying docker swarm visualizer'
   become: true
   docker_swarm_service:

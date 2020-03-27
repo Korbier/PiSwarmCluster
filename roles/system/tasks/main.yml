@@ -1,4 +1,45 @@
 ---
-# tasks file for system
-- include_tasks: hostname.yml
-- include_tasks: update.yml
+- name: "Update package repositories"
+  become: true
+  apt:
+    name: "*"
+    state: latest
+
+- name: "Upgrade packages"
+  become: true
+  apt:
+    upgrade: dist    
+
+- name: "Updating /etc/hostname"
+  become: true
+  hostname:
+    name: '{{ hostname.short }}'
+
+- name: "Updating /etc/hosts"  
+  become: true
+  lineinfile:
+     dest: /etc/hosts
+     line: '127.0.1.1       {{ hostname.short }}'    
+
+- name: "Setting gpu_mem to 16"
+  become: true
+  lineinfile:
+    dest: /boot/config.txt
+    regexp: "^#?gpu_mem"
+    line: "gpu_mem=16"
+    insertafter: EOF
+    state: present
+
+- name: "Disable hdmi on startup"
+  become: true
+  lineinfile:
+    dest: /etc/rc.local
+    regexp: "^/usr/bin/tvservice"
+    line: "/usr/bin/tvservice -o"
+    insertbefore: "^exit"
+    state: present
+
+- name: Reboot the server and wait for it to come back up.
+  become: true
+  reboot:
+    

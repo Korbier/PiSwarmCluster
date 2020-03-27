@@ -1,11 +1,11 @@
 - name: Create data directory
   file:
-    path: /home/pi/gluster/brick
+    path: "{{ directory.gluster }}"
     state: directory
     mode: '0755'
 
 - name: Create volume directory
   file:
-    path: /home/pi/volumes/
+    path: "{{ directory.volume.shared }}"
     state: directory
     mode: '0755'

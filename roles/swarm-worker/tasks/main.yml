@@ -1,4 +1,19 @@
 ---
 # tasks file for swarm-leader
-- include_tasks: retreive-token.yml
-- include_tasks: join-leader.yml
+- name: 'Retreiving leader info'
+  docker_swarm_info:
+  delegate_to: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}"
+  register: leader_info
+
+- name: 'Joining swarm cluster'
+  docker_swarm:
+    state: join
+    advertise_addr: eth0
+    join_token: "{{ leader_info.swarm_facts.JoinTokens.Worker }}"
+    remote_addrs: [ "{{ hostvars[groups['leader'][0]]['ansible_host'] }}:2377" ]
+
+- name: "Create local volume directory"
+  file:
+    path: "{{ directory.volume.local }}"
+    state: directory
+    mode: '0755'

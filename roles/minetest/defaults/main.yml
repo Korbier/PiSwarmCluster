@@ -1,8 +1,7 @@
 ---
 # defaults file for minetest
 directory:
-  work: /home/pi/temp_minetest
-  volume: /home/pi/local-volumes/minetest
+  volume: /home/pi/volumes-local/minetest
 mods:
   - mod:
     dir: ethereal

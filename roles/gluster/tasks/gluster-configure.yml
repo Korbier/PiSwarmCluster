@@ -3,13 +3,14 @@
   gluster_peer:
     state: present
     nodes: "{{ groups['data'] | map('extract', hostvars, ['ansible_host']) | join(',')  }}"
+  when: "groups['data']|length > 1"
          
 - name: 'Create gluster volume'
   become: true
   gluster_volume:
     state: present
     name: gvolume
-    bricks: /home/pi/gluster/brick
+    bricks: "{{ directory.gluster }}"
     rebalance: yes
     cluster: "{{ groups['data'] | map('extract', hostvars, ['ansible_host']) | join(',') }}"
     force: true
@@ -21,6 +22,17 @@
     state: started
     name: gvolume
 
+- name: 'Get volume state'
+  shell: "mount | grep gvolume | cat"
+  args:
+    warn: false
+  register: mounted
+  changed_when: false
+
+
 - name: 'Mount volume'
   become: true
-  shell: 'mount -t glusterfs localhost:/gvolume /home/pi/volumes/'
+  shell: "mount -t glusterfs localhost:/gvolume '{{ directory.volume.shared }}'"
+  args:
+    warn: false  
+  when: "mounted.stdout_lines|length <= 0"
