@@ -106,8 +106,3 @@
   loop: "{{ nmods }}"
   loop_control:
     label: "{{ item.name }}"   
-
-- name: 'Cleaning working directory'
-  file:
-    path: '{{ directory.work }}'
-    state: absent  
