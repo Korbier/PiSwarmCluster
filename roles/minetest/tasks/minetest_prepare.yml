@@ -71,24 +71,52 @@
     label: "{{ item.name }}"
   register: extract_output
 
-- name: "Rename github projects (removing '-master' suffix)"
+- name: "Rename github and gitlab projects (removing '-master' suffix)"
   become: true
   copy:
     src: '{{ temp_dir.path }}/{{ item.item.name }}-master/'
     dest: '{{ temp_dir.path }}/{{ item.item.name }}'
     remote_src: yes
-  when: "item.item.url.find('github') != -1"
+  when: "item.item.url.find('github') != -1 or item.item.url.find('gitlab') != -1"
   loop: "{{ extract_output.results }}"
   loop_control:
     label: "{{ item.item.name }}"
 
+- name: 'Expand mod packs'
+  copy:
+    src: '{{ temp_dir.path }}/{{ item.name }}/'
+    dest: '{{ temp_dir.path }}/packs'
+    remote_src: yes
+  when: "item.pack" 
+  loop: "{{ nmods }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: 'Collect packed mods'
+  find:
+    path: '{{ temp_dir.path }}/packs'
+    recurse: false
+    file_type: directory
+  register: pmods
+
+- name: 'Add packed mod to mod list'
+  set_fact: 
+    nmods: "{{ nmods|default([]) + [{'name': item.path | basename, 'dir': 'packs/' + (item.path | basename), 'pack': false}] }}"  
+    mods: "{{ mods|default([]) + [{'name': item.path | basename, 'dir': 'packs/' + (item.path | basename), 'pack': false}] }}" 
+  loop: "{{ pmods.files }}"
+
+- debug:
+    msg: '{{mods|length}} new mods will be deploy'
+
 - name: 'copy mods to minetest directory'
   become: true
   copy:
-    src: '{{ temp_dir.path }}/{{ item.name }}/'
+    src: '{{ temp_dir.path }}/{{ item.dir }}/'
     dest: '{{ directory.volume }}/mods/{{ item.name }}'
     remote_src: yes
-  when: "nmods|length > 0" 
+  when: 
+    - "nmods|length > 0"
+    - "not item.pack" 
   loop: "{{ nmods }}"
   loop_control:
     label: "{{ item.name }}"   
@@ -105,13 +133,11 @@
   copy:
     src: 'world.mt'
     dest: '{{ directory.volume }}/worlds/world'
-    force: false
-  when: "nmods|length > 0" 
+    force: true
 
 - name: "Activate mods"  
   become: true
   lineinfile:
-    regexp: "^#?load_mod_{{ item.name }}"
     dest: '{{ directory.volume }}/worlds/world/world.mt'
     line: 'load_mod_{{ item.name }} = true'  
     state: present

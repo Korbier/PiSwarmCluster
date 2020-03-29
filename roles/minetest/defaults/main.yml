@@ -5,7 +5,30 @@ directory:
 mods:
   - mod:
     name: ethereal
+    dir: ethereal
     url: https://notabug.org/TenPlus1/ethereal/archive/master.zip
+    pack: false
   - mod:
     name: unified_inventory
+    dir: unified_inventory
     url: https://github.com/minetest-mods/unified_inventory/archive/master.zip
+    pack: false
+  - mod:
+    name: mobs
+    dir: mobs_redo
+    url: https://notabug.org/TenPlus1/mobs_redo/archive/master.zip
+    pack: false
+  - mod:
+    name: mobs_animal
+    dir: mobs_animal
+    url: https://notabug.org/TenPlus1/mobs_animal/archive/master.zip
+    pack: false
+  - mod:
+    name: mobs_npc
+    dir: mobs_npc
+    url: https://notabug.org/TenPlus1/mobs_npc/archive/master.zip
+    pack: false
+  - mod:
+    name: homedecor_modpack
+    url: https://gitlab.com/VanessaE/homedecor_modpack/-/archive/master/homedecor_modpack-master.zip
+    pack: true
