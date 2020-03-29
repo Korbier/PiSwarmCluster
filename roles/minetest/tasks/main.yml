@@ -1,31 +1,10 @@
 ---
 # tasks file for minetest
-
 - name: 'Prepare minetest volume'
-  import_tasks: minetest_prepare_volume.yml
+  import_tasks: minetest_prepare.yml
   when: "'minetest' in group_names"
 
-- name: 'Labelize minetest node'
-  import_tasks: minetest_labelize_node.yml
-  run_once: true
+- name: 'Install minetest service'
+  import_tasks: minetest_install.yml
   when: "'manager' in group_names"
-
-- name: 'Mount minetest service'
-  docker_swarm_service:
-    name: minetest
-    image: linuxserver/minetest
-    force_update: true
-    publish:
-      - published_port: 30000
-        target_port: 30000
-        protocol: udp
-    placement:
-      constraints:
-        - node.role == worker
-        - node.labels.minetest == true
-    mounts:
-      - source: '{{ directory.volume }}'
-        target: /config/.minetest
-        type: bind
   run_once: true
-  when: "'manager' in group_names"

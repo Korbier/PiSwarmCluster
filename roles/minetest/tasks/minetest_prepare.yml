@@ -1,26 +1,26 @@
-- name: 'Collecting installed mods'
+- name: 'Collecte installed mods'
   find:
     paths: '{{ directory.volume }}/mods'
     recurse: false
     file_type: directory
   register: installed_mods_file
 
-- name: 'Initializing installed mod list'
+- name: 'Initialize installed mod list'
   set_fact:
     imods: []
 
-- name: 'Extracting installed mods name'
+- name: 'Extracte installed mods name'
   set_fact: 
     imods: "{{ imods|default([]) + [item['path'] | basename] }}"
   loop: "{{ installed_mods_file.files }}"
   loop_control:
     label: "{{ item['path'] }}"
 
-- name: 'Initializing mods to install list'
+- name: 'Initialize mods to install list'
   set_fact:
     nmods: []
 
-- name: 'Filtering mods to install'
+- name: 'Filter mods to install'
   set_fact: 
     nmods: "{{ nmods|default([]) + [item] }}"
   when: item.name not in imods
@@ -34,17 +34,14 @@
     state: directory
     mode: '0755'  
 
-- name: 'Create Minetest mods directory'
+- name: 'Create usefull minetest directories'
   file:
-    path: '{{ directory.volume }}/mods'
+    path: '{{ item }}'
     state: directory
     mode: '0755'  
-
-- name: 'Create Minetest world directory'
-  file:
-    path: '{{ directory.volume }}/worlds/world'
-    state: directory
-    mode: '0755'  
+  loop: 
+    - '{{ directory.volume }}/mods'
+    - '{{ directory.volume }}/worlds/world'
 
 - name: 'Create working directory'
   tempfile:
@@ -71,38 +68,53 @@
   when: "nmods|length > 0" 
   loop: "{{ nmods }}"
   loop_control:
-    label: "{{ item.name }}"   
+    label: "{{ item.name }}"
+  register: extract_output
+
+- name: "Rename github projects (removing '-master' suffix)"
+  become: true
+  copy:
+    src: '{{ temp_dir.path }}/{{ item.item.name }}-master/'
+    dest: '{{ temp_dir.path }}/{{ item.item.name }}'
+    remote_src: yes
+  when: "item.item.url.find('github') != -1"
+  loop: "{{ extract_output.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
 
 - name: 'copy mods to minetest directory'
   become: true
   copy:
-    src: '{{ temp_dir.path }}/{{ item.name }}'
-    dest: '{{ directory.volume }}/mods'
+    src: '{{ temp_dir.path }}/{{ item.name }}/'
+    dest: '{{ directory.volume }}/mods/{{ item.name }}'
     remote_src: yes
   when: "nmods|length > 0" 
   loop: "{{ nmods }}"
   loop_control:
     label: "{{ item.name }}"   
 
-- name: 'copy world.mt to minetest directory'
-  become: true
-  copy:
-    src: 'world.mt'
-    dest: '{{ directory.volume }}/worlds/world'
-  when: "nmods|length > 0" 
-
 - name: 'Cleaning temps directory'
+  become: true
   file:
     path: "{{ temp_dir.path }}"
     state: absent
   when: temp_dir.path is defined
 
-- name: "Activating mods"  
+- name: 'copy world.mt to minetest directory'
+  become: true
+  copy:
+    src: 'world.mt'
+    dest: '{{ directory.volume }}/worlds/world'
+    force: false
+  when: "nmods|length > 0" 
+
+- name: "Activate mods"  
   become: true
   lineinfile:
+    regexp: "^#?load_mod_{{ item.name }}"
     dest: '{{ directory.volume }}/worlds/world/world.mt'
     line: 'load_mod_{{ item.name }} = true'  
-  when: "nmods|length > 0" 
-  loop: "{{ nmods }}"
+    state: present
+  loop: "{{ mods }}"
   loop_control:
     label: "{{ item.name }}"   

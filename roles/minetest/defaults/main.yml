@@ -4,10 +4,8 @@ directory:
   volume: /home/pi/volumes-local/minetest
 mods:
   - mod:
-    dir: ethereal
     name: ethereal
     url: https://notabug.org/TenPlus1/ethereal/archive/master.zip
-#  - mod:
-#    dir: craftguide-master
-#    name: craftguide
-#    url: https://github.com/minetest-mods/craftguide/archive/master.zip 
+  - mod:
+    name: unified_inventory
+    url: https://github.com/minetest-mods/unified_inventory/archive/master.zip

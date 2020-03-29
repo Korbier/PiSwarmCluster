@@ -1,0 +1,24 @@
+- name: 'Adding minetest=true label to minetest node'
+  docker_node:
+    hostname: "{{ hostvars[groups['minetest'][0]]['inventory_hostname']  }}"
+    labels:
+      minetest: "true"
+    labels_state: replace
+
+- name: 'Mount minetest service'
+  docker_swarm_service:
+    name: minetest
+    image: linuxserver/minetest
+    force_update: true
+    publish:
+      - published_port: 30000
+        target_port: 30000
+        protocol: udp
+    placement:
+      constraints:
+        - node.role == worker
+        - node.labels.minetest == true
+    mounts:
+      - source: '{{ directory.volume }}'
+        target: /config/.minetest
+        type: bind
