@@ -17,8 +17,6 @@ Minetest : Hôte accueillant l'instance unique de minetest (volume-shared trop l
 Rôle "system" (group: all)
 -------------
 
-  Concerne les groupes : all
-
  . Mise à jour des packages
  . Mise à jour du nom d'hôte
  . Mémoire GPU fixée à 16M
@@ -43,11 +41,12 @@ Rôle "swarm-worker" (group: worker)
 -------------------
 
   . Attachement du node au leader
-  . Création du volume-local non partagé
+  . Création du volumne "volume-local" non partagé
 
 Rôle "gluster" (group: data)
 --------------
 
   . Installation des dépendances
   . Installation de Gluster
-  . Création du volume-shared partagé
+  . Création du volume "volume-shared" partagé
+ par les participants au groupe data
