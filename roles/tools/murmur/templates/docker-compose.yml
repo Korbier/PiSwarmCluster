@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  server:
+    image: {{ leader }}:5000/murmur
+    build: .
+    ports:
+      - "64738:64738"
+    volumes: 
+      - {{ volume }}:/etc/murmur
+    deploy: 
+      placement: 
+        constraints: 
+          - node.role == worker       

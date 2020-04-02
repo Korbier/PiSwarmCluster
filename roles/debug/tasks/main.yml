@@ -1,0 +1,9 @@
+---
+# tasks file for debug
+- name: 'Unsecure registry'
+  become: true
+  vars:
+    host: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}"
+  template:
+    src: daemon.json
+    dest: /etc/docker/daemon.json

@@ -1,0 +1,9 @@
+---
+# tasks file for minetest
+- name: 'Prepare murmur node'
+  import_tasks: murmur_prepare.yml
+  when: "'worker' in group_names"
+
+- name: 'Create murmur service'
+  import_tasks: murmur_install.yml
+  when: "'leader' in group_names"

@@ -9,7 +9,6 @@ Les groupes
 * Leader  : Leader au sens Swarm du terme
 * Manager : Manager au sens Swarm du terme
 * Worker  : Worker au sens Swarm du terme
-* Data    : Ensemble des hôtes pouvant lire et écrire dans volume-shared (Volume Gluster) ( => tous les workers )
 * Minetest : Hôte accueillant l'instance unique de minetest
 
 Rôle "system" (group: all)
@@ -39,11 +38,7 @@ Rôle "swarm-worker" (group: worker)
 -------------------
 
 * Attachement du node au leader
-* Création du volumne "volume-local" non partagé
-
-Rôle "gluster" (group: data)
---------------
-
-* Installation des dépendances
-* Installation de Gluster
-* Création du volume "volume-shared" partagé par les participants au groupe data
+* Création du volume "volume-local" non partagé
+* Création du volume "volume-share" partagé entre les workers :
+  * Installation des dépendances
+  * Installation de Gluster

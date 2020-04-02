@@ -1,0 +1,19 @@
+---
+# tasks file for swarm-tools
+- name: 'Downloading Registry docker image'
+  become: true
+  docker_image:
+    name: registry:2
+    source: pull   
+
+- name: 'Deploying Registry'
+  become: true
+  docker_swarm_service:
+    name: registry
+    image: registry:2
+    publish:
+      - published_port: 5000
+        target_port: 5000
+    placement:
+      constraints:
+        - node.role == manager        

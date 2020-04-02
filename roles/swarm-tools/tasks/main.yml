@@ -1,0 +1,4 @@
+---
+# tasks file for swarm-tools
+- include_tasks: install-registry.yml
+- include_tasks: install-visualizer.yml

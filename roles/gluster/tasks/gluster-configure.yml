@@ -2,18 +2,31 @@
   become: true
   gluster_peer:
     state: present
-    nodes: "{{ groups['data'] | map('extract', hostvars, ['ansible_host']) | join(',')  }}"
-  when: "groups['data']|length > 1"
+    nodes: "{{ groups['worker'] | map('extract', hostvars, ['ansible_host']) | join(',')  }}"
+  when: "groups['worker']|length > 1"
          
-- name: 'Create gluster volume'
+- name: 'Create gluster volume rebalanced'
   become: true
   gluster_volume:
     state: present
     name: gvolume
     bricks: "{{ directory.gluster }}"
     rebalance: yes
-    cluster: "{{ groups['data'] | map('extract', hostvars, ['ansible_host']) | join(',') }}"
+    cluster: "{{ groups['worker'] | map('extract', hostvars, ['ansible_host']) | join(',') }}"
     force: true
+  when: "groups['worker']|length > 1"
+  run_once: true
+
+- name: 'Create gluster volume not rebalanced'
+  become: true
+  gluster_volume:
+    state: present
+    name: gvolume
+    bricks: "{{ directory.gluster }}"
+    rebalance: no
+    cluster: "{{ groups['worker'] | map('extract', hostvars, ['ansible_host']) | join(',') }}"
+    force: true
+  when: "groups['worker']|length == 1"
   run_once: true
 
 - name: 'Start gluster volume'
@@ -28,7 +41,6 @@
     warn: false
   register: mounted
   changed_when: false
-
 
 - name: 'Mount volume'
   become: true

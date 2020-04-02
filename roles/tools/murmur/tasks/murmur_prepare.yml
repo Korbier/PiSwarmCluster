@@ -1,0 +1,12 @@
+- name: 'Prepare shared volume'
+  become: true
+  file:
+    path: '{{ directory.volume }}'
+    state: directory
+    mode: '0777'  
+
+- name: "Copy ini file"
+  become: true
+  copy:
+    src: 'mumble-server.ini'
+    dest: '{{ directory.volume }}'

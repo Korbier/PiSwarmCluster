@@ -1,0 +1,4 @@
+---
+# defaults file for minetest
+directory:
+  volume: /home/pi/volumes-shared/murmur

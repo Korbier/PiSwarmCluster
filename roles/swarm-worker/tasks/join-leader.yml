@@ -1,8 +1,0 @@
----
-# tasks file for swarm-leader
-- name: 'Joining swarm cluster'
-  docker_swarm:
-    state: join
-    advertise_addr: eth0
-    join_token: "{{ leader_info.swarm_facts.JoinTokens.Worker }}"
-    remote_addrs: [ "{{ hostvars[groups['leader'][0]]['ansible_host'] }}:2377" ]

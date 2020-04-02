@@ -1,0 +1,146 @@
+- name: 'Collecte installed mods'
+  find:
+    paths: '{{ directory.volume }}/mods'
+    recurse: false
+    file_type: directory
+  register: installed_mods_file
+
+- name: 'Initialize installed mod list'
+  set_fact:
+    imods: []
+
+- name: 'Extracte installed mods name'
+  set_fact: 
+    imods: "{{ imods|default([]) + [item['path'] | basename] }}"
+  loop: "{{ installed_mods_file.files }}"
+  loop_control:
+    label: "{{ item['path'] }}"
+
+- name: 'Initialize mods to install list'
+  set_fact:
+    nmods: []
+
+- name: 'Filter mods to install'
+  set_fact: 
+    nmods: "{{ nmods|default([]) + [item] }}"
+  when: item.name not in imods
+  loop: "{{ mods }}"
+  loop_control:
+    label: "{{ item.name }}"  
+
+- name: 'Prepare Volumes'
+  file:
+    path: '{{ directory.volume }}'
+    state: directory
+    mode: '0755'  
+
+- name: 'Create usefull minetest directories'
+  file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0755'  
+  loop: 
+    - '{{ directory.volume }}/mods'
+    - '{{ directory.volume }}/worlds/world'
+
+- name: 'Create working directory'
+  tempfile:
+    state: directory
+    suffix: temp_minetest
+  when: "nmods|length > 0" 
+  register: temp_dir
+
+- name: Download mods
+  get_url:
+    url: '{{ item.url }}'
+    dest: '{{ temp_dir.path }}/{{ item.name }}.zip'
+    mode: '0440'
+  when: "nmods|length > 0" 
+  loop: "{{ nmods }}"
+  loop_control:
+    label: "{{ item.name }}"   
+
+- name: 'Extract mods'
+  unarchive:
+    src: '{{ temp_dir.path }}/{{ item.name }}.zip'
+    dest: '{{ temp_dir.path }}'
+    remote_src: yes
+  when: "nmods|length > 0" 
+  loop: "{{ nmods }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: extract_output
+
+- name: "Rename github and gitlab projects (removing '-master' suffix)"
+  become: true
+  copy:
+    src: '{{ temp_dir.path }}/{{ item.item.name }}-master/'
+    dest: '{{ temp_dir.path }}/{{ item.item.name }}'
+    remote_src: yes
+  when: "item.item.url.find('github') != -1 or item.item.url.find('gitlab') != -1"
+  loop: "{{ extract_output.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+
+- name: 'Expand mod packs'
+  copy:
+    src: '{{ temp_dir.path }}/{{ item.name }}/'
+    dest: '{{ temp_dir.path }}/packs'
+    remote_src: yes
+  when: "item.pack" 
+  loop: "{{ nmods }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: 'Collect packed mods'
+  find:
+    path: '{{ temp_dir.path }}/packs'
+    recurse: false
+    file_type: directory
+  register: pmods
+
+- name: 'Add packed mod to mod list'
+  set_fact: 
+    nmods: "{{ nmods|default([]) + [{'name': item.path | basename, 'dir': 'packs/' + (item.path | basename), 'pack': false}] }}"  
+    mods: "{{ mods|default([]) + [{'name': item.path | basename, 'dir': 'packs/' + (item.path | basename), 'pack': false}] }}" 
+  loop: "{{ pmods.files }}"
+
+- debug:
+    msg: '{{mods|length}} new mods will be deploy'
+
+- name: 'copy mods to minetest directory'
+  become: true
+  copy:
+    src: '{{ temp_dir.path }}/{{ item.dir }}/'
+    dest: '{{ directory.volume }}/mods/{{ item.name }}'
+    remote_src: yes
+  when: 
+    - "nmods|length > 0"
+    - "not item.pack" 
+  loop: "{{ nmods }}"
+  loop_control:
+    label: "{{ item.name }}"   
+
+- name: 'Cleaning temps directory'
+  become: true
+  file:
+    path: "{{ temp_dir.path }}"
+    state: absent
+  when: temp_dir.path is defined
+
+- name: 'copy world.mt to minetest directory'
+  become: true
+  copy:
+    src: 'world.mt'
+    dest: '{{ directory.volume }}/worlds/world'
+    force: true
+
+- name: "Activate mods"  
+  become: true
+  lineinfile:
+    dest: '{{ directory.volume }}/worlds/world/world.mt'
+    line: 'load_mod_{{ item.name }} = true'  
+    state: present
+  loop: "{{ mods }}"
+  loop_control:
+    label: "{{ item.name }}"   

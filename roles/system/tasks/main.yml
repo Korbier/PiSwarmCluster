@@ -10,18 +10,58 @@
   apt:
     upgrade: dist    
 
-- name: "Updating /etc/hostname"
+- name: "Update /etc/hostname - renaming hostname"
   become: true
   hostname:
     name: '{{ hostname.short }}'
 
-- name: "Updating /etc/hosts"  
+- name: "Update /etc/hosts - Adding cluster nodes"  
   become: true
   lineinfile:
-     dest: /etc/hosts
-     line: '127.0.1.1       {{ hostname.short }}'    
+    dest: /etc/hosts
+    regexp: "{{item}}"
+    line: "{{hostvars[item]['ansible_default_ipv4']['address']}}       {{item}}"    
+    insertafter: EOF
+    state: present    
+  loop: "{{ ansible_play_batch  }}"
 
-- name: "Setting gpu_mem to 16"
+- name: "Update /etc/hosts - renaming hostname"  
+  become: true
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "127.0.1.1"
+    line: "127.0.1.1       {{hostname.short}}"    
+    insertafter: EOF
+    state: present  
+    
+- name: "Update sshd time out"
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "ClientAliveInterval"
+    line: "ClientAliveInterval 30"
+    insertafter: EOF
+    state: present
+
+- name: "Update sshd time out"
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "ClientAliveCountMax"
+    line: "ClientAliveCountMax 10"
+    insertafter: EOF
+    state: present
+
+- name: "Update sshd Qos"
+  become: true
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "IPQoS"
+    line: "IPQoS cs0 cs0"
+    insertafter: EOF
+    state: present
+
+- name: "Set gpu_mem to 16"
   become: true
   lineinfile:
     dest: /boot/config.txt
@@ -37,6 +77,12 @@
     regexp: "^/usr/bin/tvservice"
     line: "/usr/bin/tvservice -o"
     insertbefore: "^exit"
+    state: present
+
+- name: Install rng-tools5
+  become: true
+  apt:
+    name: rng-tools5
     state: present
 
 - name: Reboot the server and wait for it to come back up.
