@@ -9,5 +9,6 @@ packages:
   - libssl-dev
 
 packages_python:
+  - jsondiff
   - docker
   - docker-compose

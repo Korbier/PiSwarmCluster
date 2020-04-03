@@ -42,3 +42,9 @@ Rôle "swarm-worker" (group: worker)
 * Création du volume "volume-share" partagé entre les workers :
   * Installation des dépendances
   * Installation de Gluster
+
+Rôle "Minetest" (group: all)
+----------------------------
+
+ * Préparation du node minetest
+ * Installation du service sur un manager
