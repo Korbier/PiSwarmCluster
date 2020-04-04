@@ -3,6 +3,16 @@
 directory:
   volume: /home/pi/volumes-local/minetest
 mods:
+  - mod: 
+    name: basic_materials
+    dir: basic_materials
+    url: https://gitlab.com/VanessaE/basic_materials/-/archive/master/basic_materials-master.zip
+    pack: false
+  - mod: 
+    name: unifieddyes
+    dir: unifieddyes
+    url: https://gitlab.com/VanessaE/unifieddyes/-/archive/master/unifieddyes-master.zip
+    pack: false    
   - mod:
     name: ethereal
     dir: ethereal
@@ -32,3 +42,18 @@ mods:
     name: homedecor_modpack
     url: https://gitlab.com/VanessaE/homedecor_modpack/-/archive/master/homedecor_modpack-master.zip
     pack: true
+  - mod:
+    name: handle_schematics 
+    dir: handle_schematics
+    url: https://github.com/Sokomine/handle_schematics/archive/master.zip
+    pack: false
+  - mod:
+    name: mg_villages 
+    dir: mg_villages
+    url: https://github.com/Sokomine/mg_villages/archive/master.zip
+    pack: false
+  - mod:
+    name: cottages
+    dir: cottages
+    url: https://github.com/Sokomine/cottages/archive/master.zip
+    pack: false    
