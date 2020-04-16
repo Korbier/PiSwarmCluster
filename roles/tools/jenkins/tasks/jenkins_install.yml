@@ -1,0 +1,35 @@
+- name: 'Adding jenkins=true label to jenkins node'
+  docker_node:
+    hostname: "{{ hostvars[item]['inventory_hostname']  }}"
+    labels:
+      jenkins: "true"
+    labels_state: merge
+  loop: "{{groups['jenkins']}}"
+
+- name: 'Mount jenkins service'
+  docker_swarm_service:
+    name: jenkins
+    image: jenkins4eval/jenkins
+    force_update: true
+    user: root
+    publish:
+      - published_port: 9100
+        target_port: 8080
+      - published_port: 50000
+        target_port: 50000
+    placement:
+      constraints:
+        - node.role == worker
+        - node.labels.jenkins == true
+    mounts:
+      - source: '{{ directory.volume }}'
+        target: /var/jenkins_home
+        type: bind
+      - source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        type: bind
+      - source: /usr/bin/docker
+        target: /usr/bin/docker
+        type: bind
+      - source: '{{ directory.maven }}'
+        target: /root/.m2

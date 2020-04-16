@@ -1,0 +1,5 @@
+ansible_host: 192.168.1.21
+ansible_user: stephane
+ansible_python_interpreter: /usr/bin/python3
+hostname:
+  short: lancelot

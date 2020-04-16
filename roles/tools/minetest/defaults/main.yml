@@ -56,4 +56,14 @@ mods:
     name: cottages
     dir: cottages
     url: https://github.com/Sokomine/cottages/archive/master.zip
-    pack: false    
+    pack: false
+  - mod: 
+    name: farming
+    dir: farming
+    url: https://notabug.org/TenPlus1/farming/archive/master.zip
+    pack: false
+  - mod:
+    name: nether
+    dir: nether
+    url: https://github.com/minetest-mods/nether/archive/master.zip
+    pack: false

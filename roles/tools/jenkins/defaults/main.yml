@@ -1,0 +1,5 @@
+---
+# defaults file for minetest
+directory:
+  volume: /home/pi/volumes-shared/jenkins
+  maven: /home/pi/volumes-shared/maven

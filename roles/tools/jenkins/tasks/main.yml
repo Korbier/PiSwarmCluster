@@ -1,0 +1,9 @@
+---
+# tasks file for jenkins
+- name: 'Prepare jenkins volume'
+  import_tasks: jenkins_prepare.yml
+  when: "'jenkins' in group_names"
+
+- name: 'Install jenkins service'
+  import_tasks: jenkins_install.yml
+  when: "'leader' in group_names"

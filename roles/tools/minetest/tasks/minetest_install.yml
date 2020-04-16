@@ -3,7 +3,7 @@
     hostname: "{{ hostvars[groups['minetest'][0]]['inventory_hostname']  }}"
     labels:
       minetest: "true"
-    labels_state: replace
+    labels_state: merge
 
 - name: 'Mount minetest service'
   docker_swarm_service:
