@@ -1,0 +1,26 @@
+- name: 'Mount RabbitMQ service'
+  docker_swarm_service:
+    name: rabbit
+    image: rabbitmq:management-alpine
+    force_update: true
+    user: root
+    replicas: 1
+    publish:
+      - published_port: 4369
+        target_port: 4369
+      - published_port: 5671
+        target_port: 5671
+      - published_port: 5672
+        target_port: 5672  
+      - published_port: 15671
+        target_port: 15671  
+      - published_port: 15672
+        target_port: 15672    
+      - published_port: 25672
+        target_port: 25672
+    hostname: rabbit
+    env:
+      RABBITMQ_ERLANG_COOKIE: 'rabbit_cookie'
+    placement:
+      constraints:
+        - node.role == worker      

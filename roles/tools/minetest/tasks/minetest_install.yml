@@ -9,7 +9,8 @@
   docker_swarm_service:
     name: minetest
     image: linuxserver/minetest
-    force_update: true
+    force_update: true    
+    replicas: 1
     publish:
       - published_port: 30000
         target_port: 30000

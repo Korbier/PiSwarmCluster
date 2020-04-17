@@ -38,12 +38,9 @@
     compose:
       - "{{ temp_dir.path }}/docker-compose.yml"
 
-# docker image push image-tag
-# docker stack deploy --compose-file docker-compose.yml murmur
-
-#- name: 'Cleaning temps directory'
-#  become: true
-#  file:
-#    path: "{{ temp_dir.path }}"
-#    state: absent
-#  when: temp_dir.path is defined
+- name: 'Cleaning temps directory'
+  become: true
+  file:
+    path: "{{ temp_dir.path }}"
+    state: absent
+  when: temp_dir.path is defined
