@@ -1,0 +1,22 @@
+- name: 'Mount Mosquitto service'
+  docker_swarm_service:
+    name: mosquitto
+    image: eclipse-mosquitto
+    force_update: true
+    replicas: 1
+    publish:
+      - published_port: 10003
+        target_port: 1883 
+    mounts:
+      - source: '{{ directory.volume }}/config'
+        target: /mosquitto/config
+        type: bind     
+      - source: '{{ directory.volume }}/data'
+        target: /mosquitto/data
+        type: bind        
+      - source: '{{ directory.volume }}/log'
+        target: /mosquitto/log
+        type: bind
+    placement:
+      constraints:
+        - node.role == worker      

@@ -1,1 +1,1 @@
-{ "insecure-registries":["{{ host }}:5000"] }
+{ "insecure-registries":["{{ host }}:9001"] }

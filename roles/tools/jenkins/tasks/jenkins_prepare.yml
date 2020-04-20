@@ -1,6 +1,12 @@
-- name: 'Prepare Volumes'
+- name: 'Prepare Volume Home'
   file:
-    path: '{{ directory.volume }}'
+    path: '{{ directory.volume }}/home'
+    state: directory
+    mode: '0755'  
+
+- name: 'Prepare Volume Logs'
+  file:
+    path: '{{ directory.volume }}/logs'
     state: directory
     mode: '0755'  
 

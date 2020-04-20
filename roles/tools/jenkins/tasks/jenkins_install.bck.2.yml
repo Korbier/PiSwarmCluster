@@ -1,7 +1,15 @@
+- name: 'Adding jenkins=true label to jenkins node'
+  docker_node:
+    hostname: "{{ hostvars[item]['inventory_hostname']  }}"
+    labels:
+      jenkins: "true"
+    labels_state: merge
+  loop: "{{groups['jenkins']}}"
+
 - name: 'Create working directory'
   tempfile:
     state: directory
-    suffix: temp_murmur
+    suffix: temp_jenkins
   register: temp_dir
 
 - name: "Copy Dockerfile"    
@@ -14,7 +22,8 @@
   become: true
   vars:
     leader: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}"
-    volume: "{{ directory.volume }}"
+    volume_jenkins: "{{ directory.volume }}"
+    volume_maven: "{{ directory.maven }}"
   template:
     src: 'docker-compose.yml'
     dest: '{{ temp_dir.path }}'
@@ -26,15 +35,15 @@
     
 - name: "Tag and push to registry"
   docker_image:
-    name: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}:9001/murmur"
-    repository: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}:9001/murmur"
+    name: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}:9001/jenkins"
+    repository: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}:9001/jenkins"
     push: yes
     source: local
 
 - name: Deploy stack
   docker_stack:
     state: present
-    name: murmur
+    name: jenkins
     compose:
       - "{{ temp_dir.path }}/docker-compose.yml"
 

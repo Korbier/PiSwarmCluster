@@ -1,0 +1,8 @@
+---
+- name: 'Prepare Mosquitto service'
+  import_tasks: mosquitto_prepare.yml
+  when: "'worker' in group_names"
+
+- name: 'Install Mosquitto service'
+  import_tasks: mosquitto_install.yml
+  when: "'leader' in group_names"

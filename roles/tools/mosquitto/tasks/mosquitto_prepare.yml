@@ -1,0 +1,26 @@
+- name: 'Prepare shared volume : config'
+  become: true
+  file:
+    path: '{{ directory.volume }}/config'
+    state: directory
+    mode: '0777'  
+
+- name: 'Prepare shared volume : data'
+  become: true
+  file:
+    path: '{{ directory.volume }}/data'
+    state: directory
+    mode: '0777'   
+
+- name: 'Prepare shared volume : log'
+  become: true
+  file:
+    path: '{{ directory.volume }}/log'
+    state: directory
+    mode: '0777'  
+
+- name: "Copy mosquitto.conf file"
+  become: true
+  copy:
+    src: 'mosquitto.conf'
+    dest: '{{ directory.volume }}/config'    

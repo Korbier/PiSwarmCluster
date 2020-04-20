@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  server:
+    image: {{ leader }}:9001/jenkins
+    build: .
+    ports:
+      - "9100:8080"
+      - "50000:50000"
+    volumes: 
+      - {{ volume_jenkins }}/home:/var/jenkins_home
+      - {{ volume_jenkins }}/logs:/var/log/jenkins/jenkins.log
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - {{ volume_maven }}:/root/.m2
+    deploy: 
+      placement: 
+        constraints: 
+          - node.role == worker                 
+          - node.labels.jenkins == true

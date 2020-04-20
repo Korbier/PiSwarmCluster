@@ -2,7 +2,7 @@ version: '3'
 
 services:
   server:
-    image: {{ leader }}:5000/murmur
+    image: {{ leader }}:9001/murmur
     build: .
     ports:
       - "64738:64738"
