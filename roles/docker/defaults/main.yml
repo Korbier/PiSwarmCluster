@@ -7,6 +7,7 @@ packages:
   - python3-pip
   - libffi-dev
   - libssl-dev
+  - git
 
 packages_python:
   - jsondiff

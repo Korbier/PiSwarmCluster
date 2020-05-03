@@ -1,0 +1,41 @@
+---
+# tasks file for archiva
+- name: 'Create working directory'
+  tempfile:
+    state: directory
+    suffix: temp_nexus
+  register: temp_dir
+
+- name: "Copy Dockerfile"    
+  become: true
+  copy:
+    src: 'Dockerfile'
+    dest: '{{ temp_dir.path }}'
+
+- name: "Tag and push to registry"
+  docker_image:
+    build:
+      path: "{{ temp_dir.path }}"
+    name: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}:9001/nexus"
+    repository: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}:9001/nexus"
+    push: yes
+    source: build  
+
+- name: 'Deploying Nexus service'
+  become: true
+  docker_swarm_service:
+    name: archiva
+    image: "{{ hostvars[groups['leader'][0]]['inventory_hostname'] }}:9001/nexus"
+    publish:
+      - published_port: 10004
+        target_port: 8081
+    placement:
+      constraints:
+        - node.role == worker       
+
+- name: 'Cleaning temps directory'
+  become: true
+  file:
+    path: "{{ temp_dir.path }}"
+    state: absent
+  when: temp_dir.path is defined        

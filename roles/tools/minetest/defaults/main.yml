@@ -39,18 +39,29 @@ mods:
     url: https://notabug.org/TenPlus1/mobs_npc/archive/master.zip
     pack: false
   - mod:
+    name: mobs_monster
+    dir: mobs_monster
+    url: https://notabug.org/TenPlus1/mobs_monster/archive/master.zip
+    pack: false    
+  - mod:
+    name: mobs_water
+    dir: mobs_water
+    url: https://notabug.org/TenPlus1/mobs_water/archive/master.zip
+    pack: true   
+  - mod:
+    name: mobs_sky
+    dir: mobs_sky
+    url: https://notabug.org/TenPlus1/mobs_sky/archive/master.zip
+    pack: true      
+  - mod:
     name: homedecor_modpack
+    dir: homedecor_modpack
     url: https://gitlab.com/VanessaE/homedecor_modpack/-/archive/master/homedecor_modpack-master.zip
     pack: true
   - mod:
-    name: handle_schematics 
-    dir: handle_schematics
-    url: https://github.com/Sokomine/handle_schematics/archive/master.zip
-    pack: false
-  - mod:
-    name: mg_villages 
-    dir: mg_villages
-    url: https://github.com/Sokomine/mg_villages/archive/master.zip
+    name: bakedclay
+    dir: bakedclay
+    url: https://notabug.org/TenPlus1/bakedclay/archive/master.zip    
     pack: false
   - mod:
     name: cottages
@@ -66,4 +77,24 @@ mods:
     name: nether
     dir: nether
     url: https://github.com/minetest-mods/nether/archive/master.zip
+    pack: false
+  - mod:
+    name: 3d_armor
+    dir: minetest-3d_armor
+    url: https://github.com/stujones11/minetest-3d_armor/archive/master.zip
+    pack: true
+  - mod:
+    name: fishing
+    dir: fishing
+    url: https://github.com/MinetestForFun/fishing/archive/master.zip
+    pack: false
+  - mod:
+    name: scaffolding
+    dir: scaffolding
+    url: https://bitbucket.org/Infinatum/scaffolding/downloads/scaffolding-2.0.zip
+    pack: false
+  - mod:
+    name: minerpg
+    dir: minerpg
+    url: https://github.com/tukkek/minerpg/archive/master.zip
     pack: false

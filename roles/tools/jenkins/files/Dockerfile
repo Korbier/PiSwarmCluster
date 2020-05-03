@@ -2,10 +2,9 @@ FROM jenkins4eval/jenkins
 
 # Create Jenkins Log Folder
 USER root
-RUN mkdir /var/log/jenkins
-RUN mkdir /var/cache/jenkins
-RUN chown -R jenkins:jenkins /var/log/jenkins
-RUN chown -R jenkins:jenkins /var/cache/jenkins
+RUN mkdir /var/log/jenkins && mkdir /var/cache/jenkins && chown -R jenkins:jenkins /var/log/jenkins && chown -R jenkins:jenkins /var/cache/jenkins
+RUN apt-get update && apt-get upgrade -y && apt-get install ansible -y
+
 USER jenkins
 
 # Set default options

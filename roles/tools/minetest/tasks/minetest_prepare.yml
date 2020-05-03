@@ -74,8 +74,8 @@
 - name: "Rename github and gitlab projects (removing '-master' suffix)"
   become: true
   copy:
-    src: '{{ temp_dir.path }}/{{ item.item.name }}-master/'
-    dest: '{{ temp_dir.path }}/{{ item.item.name }}'
+    src: '{{ temp_dir.path }}/{{ item.item.dir }}-master/'
+    dest: '{{ temp_dir.path }}/{{ item.item.dir }}'
     remote_src: yes
   when: "item.item.url.find('github') != -1 or item.item.url.find('gitlab') != -1"
   loop: "{{ extract_output.results }}"
@@ -84,7 +84,7 @@
 
 - name: 'Expand mod packs'
   copy:
-    src: '{{ temp_dir.path }}/{{ item.name }}/'
+    src: '{{ temp_dir.path }}/{{ item.dir }}/'
     dest: '{{ temp_dir.path }}/packs'
     remote_src: yes
   when: "item.pack" 

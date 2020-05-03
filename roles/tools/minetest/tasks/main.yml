@@ -6,5 +6,4 @@
 
 - name: 'Install minetest service'
   import_tasks: minetest_install.yml
-  when: "'manager' in group_names"
-  run_once: true
+  when: "'leader' in group_names"
